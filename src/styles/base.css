@@ -1,0 +1,71 @@
+:root {
+  --accent: #ffd60a;
+  --bg: #1a1a1f;
+  --fg: #d3d1c7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.menu {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.menu h1 {
+  font-size: 1rem;
+  font-weight: normal;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+}
+
+.menu__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 8rem);
+  gap: 1rem;
+}
+
+.menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  transition:
+    color 0.15s linear,
+    background 0.15s linear;
+}
+
+.menu__link:hover,
+.menu__link:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+  outline: none;
+}
+
+.menu__link[aria-disabled='true'] {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
