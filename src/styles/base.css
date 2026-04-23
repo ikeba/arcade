@@ -69,3 +69,39 @@ body {
   pointer-events: none;
   cursor: not-allowed;
 }
+
+#app {
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#app > canvas {
+  display: block;
+}
+
+/* DEV only: frame #app at the target iframe size so we develop against
+   realistic dimensions without spinning up a real iframe. */
+body.dev {
+  display: grid;
+  place-items: center;
+}
+
+body.dev #app {
+  width: 600px;
+  height: 400px;
+  outline: 1px solid var(--fg);
+  position: relative;
+}
+
+body.dev #app::after {
+  content: '600 × 400';
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--fg);
+  opacity: 0.4;
+}
