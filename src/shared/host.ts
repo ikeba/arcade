@@ -1,6 +1,6 @@
 import './version';
 import { createEmitter } from './emitter';
-import { defaultTokens, type ThemeTokens } from './tokens';
+import { defaultTokens, tokensFromQuery, type ThemeTokens } from './tokens';
 
 type ThemeMessage = {
   type: 'theme';
@@ -32,7 +32,7 @@ const isThemeMessage = (data: unknown): data is ThemeMessage => {
   return typeof p.accent === 'string' && typeof p.bg === 'string' && typeof p.fg === 'string';
 };
 
-applyTokens(defaultTokens);
+applyTokens(tokensFromQuery(window.location.search));
 
 window.addEventListener('message', (event) => {
   if (!isThemeMessage(event.data)) return;
