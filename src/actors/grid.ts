@@ -6,8 +6,10 @@ export type GridCell = { x: number; y: number };
 export type GridOptions = {
   cols: number;
   rows: number;
-  // 0 = no grid lines (default; Snake). >0 = faint backdrop (Life uses 0.1).
+  // Alpha (0..1) for internal grid lines. 0 hides them (Snake default).
   lineAlpha?: number;
+  // Alpha for the outer rectangle.
+  borderAlpha?: number;
 };
 
 export type Grid = Container & {
@@ -25,7 +27,12 @@ type Paint =
   | { kind: 'cells'; data: Uint8Array }
   | { kind: 'rects'; filled: readonly GridCell[]; outlined: readonly GridCell[] };
 
-export const createGrid = ({ cols, rows, lineAlpha = 0 }: GridOptions): Grid => {
+export const createGrid = ({
+  cols,
+  rows,
+  lineAlpha = 0,
+  borderAlpha = lineAlpha,
+}: GridOptions): Grid => {
   const container = new Container() as Grid;
   const linesGfx = new Graphics();
   const cellsGfx = new Graphics();
@@ -38,27 +45,36 @@ export const createGrid = ({ cols, rows, lineAlpha = 0 }: GridOptions): Grid => 
 
   const redrawLines = () => {
     linesGfx.clear();
-    if (lineAlpha <= 0 || cellSize <= 0) return;
+    if (cellSize <= 0) return;
     const w = cellSize * cols;
     const h = cellSize * rows;
-    for (let x = 0; x <= cols; x++) {
-      const px = originX + x * cellSize;
-      linesGfx.moveTo(px, originY).lineTo(px, originY + h);
+    const { fg } = getTokens();
+    if (lineAlpha > 0) {
+      for (let x = 1; x < cols; x++) {
+        const px = originX + x * cellSize;
+        linesGfx.moveTo(px, originY).lineTo(px, originY + h);
+      }
+      for (let y = 1; y < rows; y++) {
+        const py = originY + y * cellSize;
+        linesGfx.moveTo(originX, py).lineTo(originX + w, py);
+      }
+      linesGfx.stroke({ color: fg, width: 1, alpha: lineAlpha });
     }
-    for (let y = 0; y <= rows; y++) {
-      const py = originY + y * cellSize;
-      linesGfx.moveTo(originX, py).lineTo(originX + w, py);
+    if (borderAlpha > 0) {
+      linesGfx.rect(originX, originY, w, h).stroke({ color: fg, width: 1, alpha: borderAlpha });
     }
-    linesGfx.stroke({ color: getTokens().fg, width: 1, alpha: lineAlpha });
   };
 
-  const rectAt = ({ x, y }: GridCell, inset = 0) =>
-    cellsGfx.rect(
-      originX + x * cellSize + inset,
-      originY + y * cellSize + inset,
-      cellSize - inset * 2,
-      cellSize - inset * 2,
+  const rectAt = ({ x, y }: GridCell, inset = 0) => {
+    // Clamp so tiny cellSize doesn't collapse the rect to zero or negative.
+    const safe = Math.min(inset, Math.max(0, (cellSize - 1) / 2));
+    return cellsGfx.rect(
+      originX + x * cellSize + safe,
+      originY + y * cellSize + safe,
+      cellSize - safe * 2,
+      cellSize - safe * 2,
     );
+  };
 
   const redrawCells = () => {
     cellsGfx.clear();

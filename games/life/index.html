@@ -5,17 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>arcade · life</title>
     <link rel="stylesheet" href="/src/styles/base.css" />
-    <style>
-      #app {
-        visibility: hidden;
-      }
-      body.ready #app {
-        visibility: visible;
-      }
-    </style>
   </head>
   <body>
-    <main id="app"></main>
+    <main id="app" data-pending></main>
     <script type="module" src="/src/games/life/main.ts"></script>
   </body>
 </html>

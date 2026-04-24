@@ -112,4 +112,4 @@ scene.onTick(({ deltaMS }) => {
   if (ticked) scene.grid.drawCells(cells);
 });
 
-document.body.classList.add('ready');
+container.removeAttribute('data-pending');

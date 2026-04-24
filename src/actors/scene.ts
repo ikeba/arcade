@@ -22,8 +22,9 @@ export type GridSceneOptions = {
   // Either a static list, or a factory that gets grid/panel so button
   // callbacks can close over them without forward-declaration tricks.
   buttons: readonly Container[] | ((deps: GridSceneDeps) => readonly Container[]);
-  // 0 hides the grid (Snake); >0 draws it faint (Life).
+  // 0 hides grid lines (Snake); >0 draws them faint (Life).
   lineAlpha?: number;
+  borderAlpha?: number;
 };
 
 export type GridScene = GridSceneDeps & {
@@ -43,11 +44,12 @@ export const createGridScene = ({
   stats,
   buttons,
   lineAlpha = 0,
+  borderAlpha,
 }: GridSceneOptions): GridScene => {
   const { app } = game;
 
   const title = createTitle(titleLabel);
-  const grid = createGrid({ cols, rows, lineAlpha });
+  const grid = createGrid({ cols, rows, lineAlpha, borderAlpha });
   const panel = createPanel({ rules, stats });
   const resolvedButtons = typeof buttons === 'function' ? buttons({ grid, panel }) : buttons;
   app.stage.addChild(grid, title, panel, ...resolvedButtons);
