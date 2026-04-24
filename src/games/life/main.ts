@@ -6,7 +6,7 @@ import { createLoop } from '@shared/loop';
 import { createButton, DEFAULT_BUTTON_H, DEFAULT_BUTTON_W } from '@actors/button';
 import { createText } from '@actors/text';
 import { createTitle } from '@actors/title';
-import { getTokens, onThemeChange } from '@shared/theme';
+import { getTokens, onThemeChange } from '@shared/host';
 import { GAP, GRID_ALPHA, GRID_COLS, GRID_ROWS, TICK_MS } from './config';
 import { SEED_POOL, type Pattern } from './patterns';
 

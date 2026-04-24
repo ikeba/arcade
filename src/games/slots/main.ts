@@ -1,4 +1,4 @@
-import '@shared/theme';
+import '@shared/host';
 import '@shared/dev-frame';
 import { createGame } from '@shared/game';
 import { createLoop } from '@shared/loop';

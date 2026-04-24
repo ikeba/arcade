@@ -1,2 +1,2 @@
-import '@shared/theme';
+import '@shared/host';
 import '@shared/dev-frame';

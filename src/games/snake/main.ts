@@ -1,1 +1,1 @@
-import '@shared/theme';
+import '@shared/host';

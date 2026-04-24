@@ -1,5 +1,5 @@
 import { Text, TextStyle } from 'pixi.js';
-import { getTokens, onThemeChange } from '@shared/theme';
+import { getTokens, onThemeChange } from '@shared/host';
 
 export type TextActorOptions = {
   text: string;

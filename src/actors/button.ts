@@ -1,6 +1,6 @@
 import { Container, Graphics, Rectangle } from 'pixi.js';
 import { createText } from '@actors/text';
-import { getTokens, onThemeChange } from '@shared/theme';
+import { getTokens, onThemeChange } from '@shared/host';
 
 export const DEFAULT_BUTTON_W = 128;
 export const DEFAULT_BUTTON_H = 32;

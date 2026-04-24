@@ -1,3 +1,4 @@
+import './version';
 import { createEmitter } from './emitter';
 import { defaultTokens, type ThemeTokens } from './tokens';
 
