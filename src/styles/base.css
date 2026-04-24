@@ -13,7 +13,6 @@
 html,
 body {
   height: 100%;
-  background: var(--bg);
   color: var(--fg);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -82,9 +81,11 @@ body {
   display: block;
 }
 
-/* DEV only: frame #app at the target iframe size so we develop against
-   realistic dimensions without spinning up a real iframe. */
 body.dev {
+  background: var(--bg);
+}
+
+body.dev:has(#app) {
   display: grid;
   place-items: center;
 }
@@ -92,7 +93,6 @@ body.dev {
 body.dev #app {
   width: 600px;
   height: 400px;
-  outline: 1px solid var(--fg);
   position: relative;
 }
 

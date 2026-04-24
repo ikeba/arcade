@@ -1,4 +1,3 @@
-import '@shared/theme';
 import '@shared/dev-frame';
 import { Graphics } from 'pixi.js';
 import { createGame } from '@shared/game';
@@ -7,7 +6,7 @@ import { createLoop } from '@shared/loop';
 import { createButton, DEFAULT_BUTTON_H, DEFAULT_BUTTON_W } from '@actors/button';
 import { createText } from '@actors/text';
 import { createTitle } from '@actors/title';
-import { defaultTokens } from '@shared/tokens';
+import { getTokens, onThemeChange } from '@shared/theme';
 import { GAP, GRID_ALPHA, GRID_COLS, GRID_ROWS, TICK_MS } from './config';
 import { SEED_POOL, type Pattern } from './patterns';
 
@@ -112,7 +111,7 @@ const drawGrid = () => {
     const py = originY + y * cellSize;
     gridGfx.moveTo(originX, py).lineTo(originX + w, py);
   }
-  gridGfx.stroke({ color: defaultTokens.fg, width: 1, alpha: GRID_ALPHA });
+  gridGfx.stroke({ color: getTokens().fg, width: 1, alpha: GRID_ALPHA });
 };
 
 const drawCells = () => {
@@ -124,7 +123,7 @@ const drawCells = () => {
       }
     }
   }
-  cellsGfx.fill({ color: defaultTokens.accent });
+  cellsGfx.fill({ color: getTokens().accent });
 };
 
 const restart = createButton({
@@ -149,6 +148,11 @@ const next = createButton({
   },
 });
 game.app.stage.addChild(restart, next);
+
+onThemeChange(() => {
+  drawGrid();
+  drawCells();
+});
 
 seedWithFigures();
 
