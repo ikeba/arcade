@@ -78,6 +78,13 @@ body {
   max-width: 800px;
 }
 
+/* Games mark their <main id="app" data-pending> and remove the attribute
+   from their entry once the scene has been created, to avoid flashing an
+   unsized canvas on first paint. */
+#app[data-pending] {
+  visibility: hidden;
+}
+
 #app > canvas {
   display: block;
 }
