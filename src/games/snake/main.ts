@@ -2,6 +2,7 @@ import '@shared/host';
 import '@shared/dev-frame';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
+import { createNextGameButton } from '@actors/next-game-button';
 import { createGridScene } from '@actors/scene';
 import {
   BEST_STORAGE_KEY,
@@ -66,6 +67,7 @@ const scene = createGridScene({
         grid.drawRects(state.body, [state.food]);
       },
     }),
+    createNextGameButton(),
   ],
 });
 

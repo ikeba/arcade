@@ -64,13 +64,14 @@ export const createGridScene = ({
       const originX = GAP;
       const originY = GAP + titleH + GAP;
 
-      title.position.set(w / 2, GAP + titleH / 2);
+      // Title and buttons are anchored to the grid's left edge so the whole
+      // composition reads top-to-bottom on a single column.
+      title.position.set(originX + title.width / 2, GAP + titleH / 2);
       panel.position.set(originX + gridW + GAP, originY);
       grid.setGeometry(cellSize, originX, originY);
 
       const bottomY = originY + gridH + GAP + DEFAULT_BUTTON_H / 2;
-      const rowW = resolvedButtons.length * DEFAULT_BUTTON_W + (resolvedButtons.length - 1) * GAP;
-      const firstX = (w - rowW) / 2 + DEFAULT_BUTTON_W / 2;
+      const firstX = originX + DEFAULT_BUTTON_W / 2;
       resolvedButtons.forEach((btn, i) => {
         btn.position.set(firstX + i * (DEFAULT_BUTTON_W + GAP), bottomY);
       });

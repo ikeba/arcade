@@ -1,6 +1,7 @@
 import '@shared/dev-frame';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
+import { createNextGameButton } from '@actors/next-game-button';
 import { createGridScene } from '@actors/scene';
 import { randomInt } from '@shared/helpers/random';
 import { GRID_ALPHA, GRID_COLS, GRID_ROWS, TICK_MS } from './config';
@@ -11,7 +12,7 @@ const SEED_FIGURES_MIN = 3;
 const SEED_FIGURES_MAX = 6;
 
 const RULES_TEXT = [
-  'RULES',
+  'INFO',
   '',
   'LIVE CELL WITH 2',
   'OR 3 NEIGHBORS',
@@ -81,7 +82,7 @@ const step = () => {
 
 const scene = createGridScene({
   game,
-  title: "John Conway's Game of Life",
+  title: 'Game of Life',
   cols: GRID_COLS,
   rows: GRID_ROWS,
   rules: RULES_TEXT,
@@ -95,6 +96,7 @@ const scene = createGridScene({
         grid.drawCells(cells);
       },
     }),
+    createNextGameButton(),
   ],
 });
 
