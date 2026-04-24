@@ -27,6 +27,4 @@ export const LWSS: Pattern = [
   [0, 1, 1, 1, 1],
 ];
 
-// Pool used for seeding. Small, period-low patterns so the opening state is
-// lively but not chaotic.
-export const SEED_POOL: readonly Pattern[] = [GLIDER, BLINKER, TOAD, BEACON, LWSS];
+export const SEED_POOL: readonly Pattern[] = [GLIDER, GLIDER, LWSS, TOAD, BEACON];

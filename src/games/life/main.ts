@@ -137,17 +137,21 @@ const restart = createButton({
 
 // Child→parent navigation. Standalone fallback goes to the menu so the button
 // still does something when the page is opened directly.
-const next = createButton({
-  label: 'NEXT GAME',
-  onPress: () => {
-    if (window.parent !== window) {
-      window.parent.postMessage({ type: 'next' }, '*');
-    } else {
-      window.location.href = '/';
-    }
-  },
-});
-game.app.stage.addChild(restart, next);
+
+// disable while we have only one game
+// const next = createButton({
+//   label: 'NEXT GAME',
+//   onPress: () => {
+//     if (window.parent !== window) {
+//       window.parent.postMessage({ type: 'next' }, '*');
+//     } else {
+//       window.location.href = '/';
+//     }
+//   },
+// });
+
+const buttons = [restart];
+game.app.stage.addChild(...buttons);
 
 onThemeChange(() => {
   drawGrid();
@@ -183,10 +187,12 @@ createLoop(game, {
     rules.position.set(originX + gridW + GAP, originY);
     drawGrid();
     drawCells();
-    const pitch = DEFAULT_BUTTON_W + GAP;
     const bottomY = originY + gridH + GAP + DEFAULT_BUTTON_H / 2;
-    restart.position.set(w / 2 - pitch / 2, bottomY);
-    next.position.set(w / 2 + pitch / 2, bottomY);
+    const rowW = buttons.length * DEFAULT_BUTTON_W + (buttons.length - 1) * GAP;
+    const firstX = (w - rowW) / 2 + DEFAULT_BUTTON_W / 2;
+    buttons.forEach((btn, i) => {
+      btn.position.set(firstX + i * (DEFAULT_BUTTON_W + GAP), bottomY);
+    });
   },
 });
 
