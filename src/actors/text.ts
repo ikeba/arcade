@@ -6,16 +6,20 @@ export type TextActorOptions = {
   size?: number;
   color?: string;
   letterSpacing?: number;
+  // Normalized anchor point (0..1). A scalar sets both axes. Default 0.5 =
+  // visual center. Use 0 (or [0, 0]) for top-left anchoring, e.g. paragraphs.
+  anchor?: number | [number, number];
 };
 
 const FONT_FAMILY = 'ui-monospace, Menlo, Monaco, Consolas, monospace';
 
-// Centered text actor using the project's default font and fg color.
+// Text actor using the project's default font and fg color.
 export const createText = ({
   text,
   size = 24,
   color = defaultTokens.fg,
   letterSpacing = 4,
+  anchor = 0.5,
 }: TextActorOptions): Text => {
   const actor = new Text({
     text,
@@ -26,7 +30,7 @@ export const createText = ({
       letterSpacing,
     }),
   });
-  // Anchor 0.5 makes position = center of the text.
-  actor.anchor.set(0.5);
+  const [ax, ay] = typeof anchor === 'number' ? [anchor, anchor] : anchor;
+  actor.anchor.set(ax, ay);
   return actor;
 };
