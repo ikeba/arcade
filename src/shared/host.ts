@@ -17,7 +17,6 @@ const applyTokens = (tokens: ThemeTokens): void => {
   current = { ...tokens };
   const root = document.documentElement;
   root.style.setProperty('--accent', tokens.accent);
-  root.style.setProperty('--bg', tokens.bg);
   root.style.setProperty('--fg', tokens.fg);
   emitter.emit(current);
 };
@@ -28,8 +27,8 @@ const isThemeMessage = (data: unknown): data is ThemeMessage => {
   if (maybe.type !== 'theme') return false;
   const payload = maybe.payload;
   if (typeof payload !== 'object' || payload === null) return false;
-  const p = payload as { accent?: unknown; bg?: unknown; fg?: unknown };
-  return typeof p.accent === 'string' && typeof p.bg === 'string' && typeof p.fg === 'string';
+  const p = payload as { accent?: unknown; fg?: unknown };
+  return typeof p.accent === 'string' && typeof p.fg === 'string';
 };
 
 applyTokens(tokensFromQuery(window.location.search));

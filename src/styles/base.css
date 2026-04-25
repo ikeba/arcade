@@ -1,4 +1,9 @@
 :root {
+  /* Without this, browsers treat the iframe as light-scheme and paint an
+     opaque white canvas underneath the transparent body — defeating the
+     iframe transparency. */
+  color-scheme: light dark;
+
   --accent: #ffd60a;
   --bg: #1a1a1f;
   --fg: #d3d1c7;
@@ -13,12 +18,14 @@
 html,
 body {
   height: 100%;
+  background-color: transparent;
   color: var(--fg);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .menu {
   min-height: 100%;
+  background: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
