@@ -9,6 +9,7 @@ export type ButtonOptions = {
   label: string;
   width?: number;
   height?: number;
+  fontSize?: number;
   onPress: () => void;
 };
 
@@ -16,11 +17,12 @@ export const createButton = ({
   label,
   width = DEFAULT_BUTTON_W,
   height = DEFAULT_BUTTON_H,
+  fontSize = 12,
   onPress,
 }: ButtonOptions): Container => {
   const container = new Container();
   const border = new Graphics();
-  const text = createText({ text: label, size: 12, color: getTokens().fg });
+  const text = createText({ text: label, size: fontSize, color: getTokens().fg });
   container.addChild(border, text);
 
   let hovered = false;

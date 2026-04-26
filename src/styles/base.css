@@ -93,6 +93,9 @@ body {
 
 #app > canvas {
   display: block;
+  /* Suppress browser default scroll/zoom on canvas so on-screen vkeyboard
+     and game taps don't trigger pinch-zoom or iframe scroll on mobile. */
+  touch-action: none;
 }
 
 body.dev {

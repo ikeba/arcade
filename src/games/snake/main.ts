@@ -57,6 +57,7 @@ const scene = createGridScene({
   rules: RULES_TEXT,
   stats: { SCORE: '0', BEST: String(best) },
   borderAlpha: 1,
+  controls: { onDirection: (direction) => enqueueDir(state, direction) },
   buttons: ({ grid, panel }) => [
     createButton({
       label: 'RESTART',
