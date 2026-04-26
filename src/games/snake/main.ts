@@ -14,7 +14,7 @@ import {
 } from './config';
 import { createInitialState, enqueueDir, step, type Dir, type SnakeState } from './state';
 
-const RULES_TEXT = ['RULES', '', 'EAT THE SQUARE.', '', 'AVOID WALLS', 'AND YOURSELF.'].join('\n');
+const RULES_TEXT = ['EAT THE SQUARE.', '', 'AVOID WALLS', 'AND YOURSELF.'].join('\n');
 
 const KEY_TO_DIR: Record<string, Dir> = {
   ArrowUp: 'up',

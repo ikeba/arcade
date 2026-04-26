@@ -70,7 +70,8 @@ export const createGridScene = ({
       panel.position.set(originX + gridW + GAP, originY);
       grid.setGeometry(cellSize, originX, originY);
 
-      const bottomY = originY + gridH + GAP + DEFAULT_BUTTON_H / 2;
+      const contentH = Math.max(gridH, panel.height);
+      const bottomY = originY + contentH + GAP + DEFAULT_BUTTON_H / 2;
       const firstX = originX + DEFAULT_BUTTON_W / 2;
       resolvedButtons.forEach((btn, i) => {
         btn.position.set(firstX + i * (DEFAULT_BUTTON_W + GAP), bottomY);

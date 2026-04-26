@@ -12,8 +12,6 @@ const SEED_FIGURES_MIN = 3;
 const SEED_FIGURES_MAX = 6;
 
 const RULES_TEXT = [
-  'INFO',
-  '',
   'LIVE CELL WITH 2',
   'OR 3 NEIGHBORS',
   'LIVES.',
