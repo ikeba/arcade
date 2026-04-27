@@ -5,13 +5,21 @@ import { fileURLToPath } from 'node:url';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
-const { version } = JSON.parse(
-  readFileSync(resolve(rootDir, 'package.json'), 'utf-8'),
-) as { version: string };
+const { version } = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8')) as {
+  version: string;
+};
 
 export default defineConfig({
   define: {
     __VERSION__: JSON.stringify(version),
+  },
+  server: {
+    port: 9998,
+    strictPort: true,
+  },
+  preview: {
+    port: 9998,
+    strictPort: true,
   },
   resolve: {
     alias: {
