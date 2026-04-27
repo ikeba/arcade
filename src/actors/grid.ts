@@ -16,6 +16,7 @@ export type Grid = Container & {
   readonly cols: number;
   readonly rows: number;
   setGeometry: (cellSize: number, originX: number, originY: number) => void;
+  getGeometry: () => { cellSize: number; originX: number; originY: number };
   // Life-style dense rendering — one byte per cell.
   drawCells: (cells: Uint8Array) => void;
   // Snake-style sparse rendering — explicit lists so games can mix solid and
@@ -109,7 +110,10 @@ export const createGrid = ({
     originY = oy;
     redrawLines();
     redrawCells();
+    container.emit('geometry');
   };
+
+  container.getGeometry = () => ({ cellSize, originX, originY });
 
   container.drawCells = (data) => {
     last = { kind: 'cells', data };

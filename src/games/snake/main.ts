@@ -3,6 +3,7 @@ import '@shared/dev-frame';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
 import { createNextGameButton } from '@actors/next-game-button';
+import { createGridOverlay } from '@actors/grid-overlay';
 import { createGridScene } from '@actors/scene';
 import {
   BEST_STORAGE_KEY,
@@ -75,8 +76,28 @@ const scene = createGridScene({
 const draw = () => scene.grid.drawRects(state.body, [state.food]);
 draw();
 
+const idleHint = createGridOverlay({
+  grid: scene.grid,
+  text: 'PRESS ANY KEY',
+  rowOffset: -3,
+  pulse: { amplitude: 0.3, periodMs: 1500 },
+});
+
+const gameOver = createGridOverlay({
+  grid: scene.grid,
+  text: 'GAME OVER',
+  size: 24,
+  letterSpacing: 8,
+});
+game.app.stage.addChild(idleHint, gameOver);
+
 scene.onTick(({ deltaMS }) => {
-  if (!state.alive) return;
+  idleHint.update(deltaMS, !state.started);
+  gameOver.update(deltaMS, state.started && !state.alive);
+});
+
+scene.onTick(({ deltaMS }) => {
+  if (!state.alive || !state.started) return;
   tickAccum += deltaMS;
   // At most one step per frame — otherwise a tab switch or GC pause lets the
   // snake teleport several cells in one frame with no chance for input to
@@ -99,10 +120,16 @@ scene.onTick(({ deltaMS }) => {
   draw();
 });
 
+const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta', 'AltGraph']);
+
 // Listener lives the lifetime of the page — no scene teardown path exists
 // yet. When GameHandle.destroy starts being called, pair this with
 // removeEventListener to avoid firing into a dead state.
 window.addEventListener('keydown', (e) => {
+  if (MODIFIER_KEYS.has(e.key)) return;
+  // PRESS ANY KEY: any non-modifier keydown wakes the game, even if it's
+  // not a directional key.
+  state.started = true;
   const dir = dirFromKey(e.key);
   if (!dir) return;
   enqueueDir(state, dir);

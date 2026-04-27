@@ -20,6 +20,10 @@ export type SnakeState = {
   inputs: Dir[];
   food: Cell;
   alive: boolean;
+  // False until the player's first directional input. The tick loop is
+  // gated on this so the snake doesn't auto-march before the player is
+  // looking at the iframe.
+  started: boolean;
   score: number;
   tickMs: number;
 };
@@ -70,6 +74,7 @@ export const createInitialState = (cfg: SnakeConfig): SnakeState => {
     inputs: [],
     food,
     alive: true,
+    started: false,
     score: 0,
     tickMs: cfg.tickMsStart,
   };
@@ -80,6 +85,9 @@ export const createInitialState = (cfg: SnakeConfig): SnakeState => {
 // the last slot (a spammed fourth keypress should override the third, not
 // be silently dropped), so the predecessor is inputs[len-2] in that case.
 export const enqueueDir = (state: SnakeState, dir: Dir): void => {
+  // Any directional input wakes the game — even one that's rejected as a
+  // direction (same-as-current or 180°). The player signaled intent.
+  state.started = true;
   const full = state.inputs.length >= MAX_INPUTS;
   const refIdx = full ? state.inputs.length - 2 : state.inputs.length - 1;
   const prevDir = refIdx >= 0 ? state.inputs[refIdx] : state.dir;
