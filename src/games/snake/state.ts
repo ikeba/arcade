@@ -48,12 +48,16 @@ const OPPOSITE: Record<Dir, Dir> = {
 // vanishingly unlikely in normal play, but without the guard the while loop
 // would spin forever and freeze the tab.
 const placeFood = (body: readonly Cell[], cols: number, rows: number): Cell | null => {
-  if (body.length >= cols * rows) return null;
+  if (body.length >= cols * rows) {
+    return null;
+  }
   const occupied = new Set(body.map((c) => c.y * cols + c.x));
   while (true) {
     const x = randomInt(cols);
     const y = randomInt(rows);
-    if (!occupied.has(y * cols + x)) return { x, y };
+    if (!occupied.has(y * cols + x)) {
+      return { x, y };
+    }
   }
 };
 
@@ -67,7 +71,9 @@ export const createInitialState = (cfg: SnakeConfig): SnakeState => {
   ];
   // Start body is never full, so placeFood is guaranteed non-null here.
   const food = placeFood(body, cfg.cols, cfg.rows);
-  if (food === null) throw new Error('snake: grid too small for initial food');
+  if (food === null) {
+    throw new Error('snake: grid too small for initial food');
+  }
   return {
     body,
     dir: 'right',
@@ -91,15 +97,24 @@ export const enqueueDir = (state: SnakeState, dir: Dir): void => {
   const full = state.inputs.length >= MAX_INPUTS;
   const refIdx = full ? state.inputs.length - 2 : state.inputs.length - 1;
   const prevDir = refIdx >= 0 ? state.inputs[refIdx] : state.dir;
-  if (dir === prevDir || OPPOSITE[prevDir] === dir) return;
-  if (full) state.inputs[state.inputs.length - 1] = dir;
-  else state.inputs.push(dir);
+  if (dir === prevDir || OPPOSITE[prevDir] === dir) {
+    return;
+  }
+  if (full) {
+    state.inputs[state.inputs.length - 1] = dir;
+  } else {
+    state.inputs.push(dir);
+  }
 };
 
 export const step = (state: SnakeState, cfg: SnakeConfig): void => {
-  if (!state.alive) return;
+  if (!state.alive) {
+    return;
+  }
   const nextDir = state.inputs.shift();
-  if (nextDir !== undefined) state.dir = nextDir;
+  if (nextDir !== undefined) {
+    state.dir = nextDir;
+  }
   const d = DELTAS[state.dir];
   const head = state.body[0];
   const next: Cell = { x: head.x + d.x, y: head.y + d.y };

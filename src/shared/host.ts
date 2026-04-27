@@ -27,11 +27,17 @@ const applyTokens = (tokens: ThemeTokens): void => {
 };
 
 const isThemeMessage = (data: unknown): data is ThemeMessage => {
-  if (typeof data !== 'object' || data === null) return false;
+  if (typeof data !== 'object' || data === null) {
+    return false;
+  }
   const maybe = data as { type?: unknown; payload?: unknown };
-  if (maybe.type !== 'theme') return false;
+  if (maybe.type !== 'theme') {
+    return false;
+  }
   const payload = maybe.payload;
-  if (typeof payload !== 'object' || payload === null) return false;
+  if (typeof payload !== 'object' || payload === null) {
+    return false;
+  }
   const p = payload as { accent?: unknown; fg?: unknown };
   return typeof p.accent === 'string' && typeof p.fg === 'string';
 };
@@ -39,7 +45,9 @@ const isThemeMessage = (data: unknown): data is ThemeMessage => {
 applyTokens(tokensFromQuery(window.location.search));
 
 window.addEventListener('message', (event) => {
-  if (!isThemeMessage(event.data)) return;
+  if (!isThemeMessage(event.data)) {
+    return;
+  }
   applyTokens(event.data.payload);
 });
 
@@ -51,7 +59,9 @@ if (gameSlug !== null) {
   // Capture-phase so a game's preventDefault on keydown can't swallow this
   // first-input signal. One-shot — modifier-only keypresses don't count.
   const onFirstInput = (event: Event): void => {
-    if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) return;
+    if (event instanceof KeyboardEvent && MODIFIER_KEYS.has(event.key)) {
+      return;
+    }
     track('arcade_game_engaged', { game: gameSlug });
     window.removeEventListener('keydown', onFirstInput, true);
     window.removeEventListener('pointerdown', onFirstInput, true);

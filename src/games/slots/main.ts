@@ -7,7 +7,9 @@ import { createText } from '@actors/text';
 // Slots entry — fills #app with a centered "Hello World".
 
 const container = document.getElementById('app');
-if (!container) throw new Error('#app not found');
+if (!container) {
+  throw new Error('#app not found');
+}
 
 const game = await createGame(container);
 

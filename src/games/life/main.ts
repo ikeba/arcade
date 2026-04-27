@@ -24,7 +24,9 @@ const RULES_TEXT = [
 ].join('\n');
 
 const container = document.getElementById('app');
-if (!container) throw new Error('#app not found');
+if (!container) {
+  throw new Error('#app not found');
+}
 const game = await createGame(container);
 
 let cells = new Uint8Array(GRID_COLS * GRID_ROWS);
@@ -65,7 +67,9 @@ const step = () => {
       let n = 0;
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
-          if (dx === 0 && dy === 0) continue;
+          if (dx === 0 && dy === 0) {
+            continue;
+          }
           const nx = (x + dx + GRID_COLS) % GRID_COLS;
           const ny = (y + dy + GRID_ROWS) % GRID_ROWS;
           n += cells[idx(nx, ny)];
@@ -109,7 +113,9 @@ scene.onTick(({ deltaMS }) => {
     tickAccum -= TICK_MS;
     ticked = true;
   }
-  if (ticked) scene.grid.drawCells(cells);
+  if (ticked) {
+    scene.grid.drawCells(cells);
+  }
 });
 
 container.removeAttribute('data-pending');

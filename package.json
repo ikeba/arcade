@@ -1,7 +1,7 @@
 {
   "name": "arcade",
   "private": true,
-  "version": "0.0.12",
+  "version": "0.0.14",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix && prettier --write .",
     "format": "prettier --write .",
     "prepare": "husky"
   },

@@ -44,7 +44,9 @@ const CFG = {
 };
 
 const container = document.getElementById('app');
-if (!container) throw new Error('#app not found');
+if (!container) {
+  throw new Error('#app not found');
+}
 const game = await createGame(container);
 
 let best = Number(localStorage.getItem(BEST_STORAGE_KEY)) || 0;
@@ -99,7 +101,9 @@ scene.onTick(({ deltaMS }) => {
 });
 
 scene.onTick(({ deltaMS }) => {
-  if (!state.alive || !state.started) return;
+  if (!state.alive || !state.started) {
+    return;
+  }
   tickAccum += deltaMS;
   // At most one step per frame — otherwise a tab switch or GC pause lets the
   // snake teleport several cells in one frame with no chance for input to
@@ -129,12 +133,16 @@ const MODIFIER_KEYS = new Set(['Shift', 'Control', 'Alt', 'Meta', 'AltGraph']);
 // yet. When GameHandle.destroy starts being called, pair this with
 // removeEventListener to avoid firing into a dead state.
 window.addEventListener('keydown', (e) => {
-  if (MODIFIER_KEYS.has(e.key)) return;
+  if (MODIFIER_KEYS.has(e.key)) {
+    return;
+  }
   // PRESS ANY KEY: any non-modifier keydown wakes the game, even if it's
   // not a directional key.
   state.started = true;
   const dir = dirFromKey(e.key);
-  if (!dir) return;
+  if (!dir) {
+    return;
+  }
   enqueueDir(state, dir);
   // Arrow keys would otherwise scroll the iframe host.
   e.preventDefault();
