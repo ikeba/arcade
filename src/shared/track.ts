@@ -5,7 +5,9 @@ type TrackMessage = {
 };
 
 export const track = (name: string, properties: Record<string, unknown> = {}): void => {
-  if (window.parent === window) return;
+  if (window.parent === window) {
+    return;
+  }
   const message: TrackMessage = { type: 'track', name, properties };
   window.parent.postMessage(message, '*');
 };

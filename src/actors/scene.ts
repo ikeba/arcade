@@ -95,7 +95,9 @@ export const createGridScene = ({
       } else {
         bottomY = originY + contentH + GAP + DEFAULT_BUTTON_H / 2;
       }
-      if (vkeyboard) vkeyboard.visible = showVkeyboard;
+      if (vkeyboard) {
+        vkeyboard.visible = showVkeyboard;
+      }
       const firstX = originX + DEFAULT_BUTTON_W / 2;
       resolvedButtons.forEach((btn, i) => {
         btn.position.set(firstX + i * (DEFAULT_BUTTON_W + GAP), bottomY);

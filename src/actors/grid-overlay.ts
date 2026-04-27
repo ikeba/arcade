@@ -35,7 +35,9 @@ export const createGridOverlay = ({
 
   const reposition = () => {
     const { cellSize, originX, originY } = grid.getGeometry();
-    if (cellSize <= 0) return;
+    if (cellSize <= 0) {
+      return;
+    }
     container.position.set(
       originX + (grid.cols * cellSize) / 2,
       originY + (grid.rows / 2 + rowOffset) * cellSize,
@@ -45,7 +47,9 @@ export const createGridOverlay = ({
     container.scale.set(1);
     const maxWidth = grid.cols * cellSize - cellSize;
     const naturalWidth = container.width;
-    if (naturalWidth > maxWidth) container.scale.set(maxWidth / naturalWidth);
+    if (naturalWidth > maxWidth) {
+      container.scale.set(maxWidth / naturalWidth);
+    }
   };
   reposition();
   grid.on('geometry', reposition);
@@ -53,7 +57,9 @@ export const createGridOverlay = ({
   let elapsed = 0;
   container.update = (deltaMS, visible) => {
     container.visible = visible;
-    if (!visible || !pulse) return;
+    if (!visible || !pulse) {
+      return;
+    }
     elapsed += deltaMS;
     container.alpha =
       1 - pulse.amplitude + pulse.amplitude * Math.sin((elapsed / pulse.periodMs) * Math.PI * 2);

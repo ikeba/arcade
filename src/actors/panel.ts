@@ -24,7 +24,9 @@ export const createPanel = ({ rules, stats }: PanelOptions): Panel => {
 
   // Pad keys to the longest one so values line up in a single column.
   const formatStats = () => {
-    if (values.size === 0) return '';
+    if (values.size === 0) {
+      return '';
+    }
     const keys = Array.from(values.keys());
     const pad = Math.max(...keys.map((k) => k.length));
     return Array.from(values.entries())
@@ -41,7 +43,9 @@ export const createPanel = ({ rules, stats }: PanelOptions): Panel => {
 
   container.setStat = (key, value) => {
     values.set(key, value);
-    if (statsText) statsText.text = formatStats();
+    if (statsText) {
+      statsText.text = formatStats();
+    }
   };
 
   return container;

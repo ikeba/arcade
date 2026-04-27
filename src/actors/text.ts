@@ -37,7 +37,10 @@ export const createText = ({
 
   if (color === undefined) {
     const off = onThemeChange((t) => {
-      if (actor.destroyed) return;
+      if (actor.destroyed) {
+        return;
+      }
+
       actor.style.fill = t.fg;
     });
     actor.on('destroyed', off);

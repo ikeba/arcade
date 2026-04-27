@@ -13,6 +13,7 @@ export default [
     files: ['**/*.{ts,tsx,js,mjs}'],
     rules: {
       eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
     },
   },
 ];

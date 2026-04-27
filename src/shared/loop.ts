@@ -22,15 +22,21 @@ export const createLoop = (
     ? (ticker: Ticker) => update({ deltaMS: ticker.deltaMS, deltaTime: ticker.deltaTime })
     : null;
 
-  if (tickHandler) app.ticker.add(tickHandler);
+  if (tickHandler) {
+    app.ticker.add(tickHandler);
+  }
 
   const unsubscribeResize = layout ? onResize(layout) : null;
 
   // Run layout once so initial dims are applied before the first frame.
-  if (layout) layout(app.screen.width, app.screen.height);
+  if (layout) {
+    layout(app.screen.width, app.screen.height);
+  }
 
   return () => {
-    if (tickHandler) app.ticker.remove(tickHandler);
+    if (tickHandler) {
+      app.ticker.remove(tickHandler);
+    }
     unsubscribeResize?.();
   };
 };

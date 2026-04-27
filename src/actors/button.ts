@@ -28,7 +28,9 @@ export const createButton = ({
   let hovered = false;
 
   const repaint = () => {
-    if (container.destroyed) return;
+    if (container.destroyed) {
+      return;
+    }
     const { fg, accent } = getTokens();
     const color = hovered ? accent : fg;
     border.clear();

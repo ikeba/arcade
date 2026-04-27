@@ -46,7 +46,9 @@ export const createGrid = ({
 
   const redrawLines = () => {
     linesGfx.clear();
-    if (cellSize <= 0) return;
+    if (cellSize <= 0) {
+      return;
+    }
     const w = cellSize * cols;
     const h = cellSize * rows;
     const { fg } = getTokens();
@@ -79,13 +81,17 @@ export const createGrid = ({
 
   const redrawCells = () => {
     cellsGfx.clear();
-    if (!last || cellSize <= 0) return;
+    if (!last || cellSize <= 0) {
+      return;
+    }
     const { accent } = getTokens();
     if (last.kind === 'cells') {
       const { data } = last;
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
-          if (data[y * cols + x] === 1) rectAt({ x, y });
+          if (data[y * cols + x] === 1) {
+            rectAt({ x, y });
+          }
         }
       }
       cellsGfx.fill({ color: accent });
@@ -126,7 +132,9 @@ export const createGrid = ({
   };
 
   const off = onThemeChange(() => {
-    if (container.destroyed) return;
+    if (container.destroyed) {
+      return;
+    }
     redrawLines();
     redrawCells();
   });
