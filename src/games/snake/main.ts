@@ -1,5 +1,6 @@
-import '@shared/host';
+import { getGame } from '@shared/host';
 import '@shared/dev-frame';
+import { track } from '@shared/track';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
 import { createNextGameButton } from '@actors/next-game-button';
@@ -63,6 +64,7 @@ const scene = createGridScene({
     createButton({
       label: 'RESTART',
       onPress: () => {
+        track('arcade_game_restart', { game: getGame() });
         state = createInitialState(CFG);
         tickAccum = 0;
         panel.setStat('SCORE', '0');
@@ -109,6 +111,7 @@ scene.onTick(({ deltaMS }) => {
   tickAccum = Math.min(tickAccum - state.tickMs, state.tickMs);
   step(state, CFG);
   if (!state.alive) {
+    track('arcade_game_over', { game: getGame(), score: state.score });
     if (state.score > best) {
       best = state.score;
       localStorage.setItem(BEST_STORAGE_KEY, String(best));

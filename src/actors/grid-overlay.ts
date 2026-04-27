@@ -40,6 +40,12 @@ export const createGridOverlay = ({
       originX + (grid.cols * cellSize) / 2,
       originY + (grid.rows / 2 + rowOffset) * cellSize,
     );
+    // Shrink to fit when the rendered text is wider than the grid (mobile).
+    // Inset by half a cell on each side so it never touches the border.
+    container.scale.set(1);
+    const maxWidth = grid.cols * cellSize - cellSize;
+    const naturalWidth = container.width;
+    if (naturalWidth > maxWidth) container.scale.set(maxWidth / naturalWidth);
   };
   reposition();
   grid.on('geometry', reposition);
