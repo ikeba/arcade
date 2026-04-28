@@ -8,8 +8,8 @@ import { GRID_ALPHA, GRID_COLS, GRID_ROWS, TICK_MS } from './config';
 import { SEED_POOL, type Pattern } from './patterns';
 
 // How many figures to stamp on seed.
-const SEED_FIGURES_MIN = 3;
-const SEED_FIGURES_MAX = 6;
+const SEED_FIGURES_MIN = 6;
+const SEED_FIGURES_MAX = 12;
 
 const RULES_TEXT = [
   'LIVE CELL WITH 2',
@@ -89,6 +89,7 @@ const scene = createGridScene({
   rows: GRID_ROWS,
   rules: RULES_TEXT,
   lineAlpha: GRID_ALPHA,
+  borderAlpha: 1,
   buttons: ({ grid }) => [
     createButton({
       label: 'RESTART',

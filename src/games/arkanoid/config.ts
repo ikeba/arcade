@@ -1,11 +1,11 @@
-export const GRID_COLS = 20;
+export const GRID_COLS = 24;
 export const GRID_ROWS = 16;
 
-// Brick rect (inclusive): rows 2..5, cols 3..16 → 4 × 14 = 56 bricks.
+// Brick rect (inclusive): rows 2..5, cols 5..18 → 4 × 14 = 56 bricks.
 export const BRICK_ROW_TOP = 2;
 export const BRICK_ROW_BOTTOM = 6;
-export const BRICK_COL_LEFT = 3;
-export const BRICK_COL_RIGHT = 17;
+export const BRICK_COL_LEFT = 2;
+export const BRICK_COL_RIGHT = 22;
 
 // Paddle width is a float in cell units — shrinks linearly from PADDLE_WIDTH
 // to PADDLE_WIDTH_MIN as bricks are broken. Rendered on its own Graphics

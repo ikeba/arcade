@@ -1,5 +1,7 @@
-export const GRID_COLS = 36;
-export const GRID_ROWS = 25;
+// Twice snake/arkanoid (24 × 16) so the outer field rectangle matches them
+// pixel-for-pixel while life keeps a finer-grained playfield (cellSize = half).
+export const GRID_COLS = 48;
+export const GRID_ROWS = 32;
 
 // Milliseconds between generations.
 export const TICK_MS = 200;
