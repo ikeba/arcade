@@ -2,16 +2,17 @@ import type { Container, Ticker } from 'pixi.js';
 import type { GameHandle } from '@shared/game';
 import { createLoop, type LoopTick } from '@shared/loop';
 import { computeGridLayout, GAP } from '@shared/layout';
-import { isTouchUI, onPointerChange } from '@shared/touch';
+import { isTouchUI, onTouchUIChange } from '@shared/touch';
 import { createTitle } from '@actors/title';
 import { DEFAULT_BUTTON_H, DEFAULT_BUTTON_W } from '@actors/button';
 import { createGrid, type Grid } from '@actors/grid';
-import { createPanel, type Panel } from '@actors/panel';
+import { createScoreHud, type ScoreHud } from '@actors/score-hud';
+import { createText } from '@actors/text';
 import { createVKeyboard, VKEYBOARD_HEIGHT, type VKeyboardDirection } from '@actors/vkeyboard';
 
 export type GridSceneDeps = {
   grid: Grid;
-  panel: Panel;
+  scoreHud: ScoreHud;
 };
 
 export type GridSceneOptions = {
@@ -19,17 +20,20 @@ export type GridSceneOptions = {
   title: string;
   cols: number;
   rows: number;
+  // Single-line rule blurb rendered below the grid.
   rules: string;
+  // Optional key/value stats. First key shows top-left inside the grid,
+  // second top-right. Updated live via scoreHud.setStat.
   stats?: Record<string, string>;
-  // Either a static list, or a factory that gets grid/panel so button
+  // Either a static list, or a factory that gets grid/scoreHud so button
   // callbacks can close over them without forward-declaration tricks.
   buttons: readonly Container[] | ((deps: GridSceneDeps) => readonly Container[]);
   // 0 hides grid lines (Snake); >0 draws them faint (Life).
   lineAlpha?: number;
   borderAlpha?: number;
-  // Optional touch / narrow-viewport on-screen arrow keys. When provided, an
-  // inverted-T vkeyboard appears between the grid and the action buttons on
-  // touch devices or viewports < 600px.
+  // Optional touch / narrow-window on-screen arrow keys. When provided, an
+  // inverted-T vkeyboard appears between the rules and the action buttons on
+  // touch devices in windows narrower than 600px.
   controls?: { onDirection: (direction: VKeyboardDirection) => void };
 };
 
@@ -38,9 +42,16 @@ export type GridScene = GridSceneDeps & {
   onTick: (cb: (tick: LoopTick) => void) => () => void;
 };
 
-// Lays out a canonical arcade screen: title (top-center), grid (left), panel
-// (right of grid), buttons (bottom-center). All slack from flooring lands on
-// the outer canvas edges (right, bottom) so inner gutters stay exact.
+const RULES_OPTS = {
+  size: 11,
+  letterSpacing: 2,
+  anchor: [0, 0] as [number, number],
+};
+
+// Lays out a canonical arcade screen: title (top, left-anchored to grid),
+// grid (full width minus gutters) with the score HUD floating inside its
+// top edge, single-line rules under the grid, optional vkeyboard, then a
+// row of action buttons at the bottom.
 export const createGridScene = ({
   game,
   title: titleLabel,
@@ -57,43 +68,59 @@ export const createGridScene = ({
 
   const title = createTitle(titleLabel);
   const grid = createGrid({ cols, rows, lineAlpha, borderAlpha });
-  const panel = createPanel({ rules, stats });
-  const resolvedButtons = typeof buttons === 'function' ? buttons({ grid, panel }) : buttons;
+  const scoreHud = createScoreHud({ stats });
+  scoreHud.attachToGrid(grid);
+  const rulesText = createText({ ...RULES_OPTS, text: rules });
+  const resolvedButtons = typeof buttons === 'function' ? buttons({ grid, scoreHud }) : buttons;
   const vkeyboard = controls ? createVKeyboard({ onPress: controls.onDirection }) : null;
-  app.stage.addChild(grid, title, panel, ...resolvedButtons);
+  // Order matters: HUD on top of grid cells, buttons after so hover hits them.
+  app.stage.addChild(grid, scoreHud, title, rulesText, ...resolvedButtons);
   if (vkeyboard) {
     app.stage.addChild(vkeyboard);
-    // Pointer-type flips (e.g. docking a mouse on a hybrid tablet) don't
-    // fire ResizeObserver, so request a fresh layout pass directly.
-    onPointerChange(() => app.queueResize());
+    // Pointer-type flips and window resizes can cross the touch-UI threshold
+    // without changing the canvas size (host iframe stays put), so request
+    // a fresh layout pass directly.
+    onTouchUIChange(() => app.queueResize());
   }
 
   createLoop(game, {
     layout: (w, h) => {
       const titleH = title.height;
-      const showVkeyboard = vkeyboard !== null && isTouchUI(w);
-      const vkeyboardReserve = showVkeyboard ? GAP + VKEYBOARD_HEIGHT : 0;
-      const availW = w - GAP * 3 - panel.width;
-      const availH = h - GAP * 4 - titleH - DEFAULT_BUTTON_H - vkeyboardReserve;
-      const { cellSize, gridW, gridH } = computeGridLayout({ availW, availH, cols, rows });
+      const showVkeyboard = vkeyboard !== null && isTouchUI();
+      const vkeyboardReserve = showVkeyboard ? VKEYBOARD_HEIGHT + GAP : 0;
+
+      // Measure rules at natural scale before deciding the grid size.
+      rulesText.scale.set(1);
+      const naturalRulesW = rulesText.width;
+      const naturalRulesH = rulesText.height;
+
+      const availW = w - GAP * 2;
+      const availH =
+        h - GAP * 5 - titleH - naturalRulesH - vkeyboardReserve - DEFAULT_BUTTON_H;
+      const { cellSize, gridH } = computeGridLayout({ availW, availH, cols, rows });
 
       const originX = GAP;
       const originY = GAP + titleH + GAP;
 
-      // Title and buttons are anchored to the grid's left edge so the whole
-      // composition reads top-to-bottom on a single column.
       title.position.set(originX + title.width / 2, GAP + titleH / 2);
-      panel.position.set(originX + gridW + GAP, originY);
       grid.setGeometry(cellSize, originX, originY);
 
-      const contentH = Math.max(gridH, panel.height);
+      // Shrink rules if they overflow the grid width on tight viewports.
+      const gridW = cellSize * cols;
+      if (naturalRulesW > gridW && gridW > 0) {
+        rulesText.scale.set(gridW / naturalRulesW);
+      }
+
+      const rulesY = originY + gridH + GAP;
+      rulesText.position.set(originX, rulesY);
+
+      const afterRules = rulesY + rulesText.height + GAP;
       let bottomY: number;
       if (showVkeyboard && vkeyboard) {
-        const vkeyboardY = originY + contentH + GAP;
-        vkeyboard.position.set(originX, vkeyboardY);
-        bottomY = vkeyboardY + VKEYBOARD_HEIGHT + GAP + DEFAULT_BUTTON_H / 2;
+        vkeyboard.position.set(originX, afterRules);
+        bottomY = afterRules + VKEYBOARD_HEIGHT + GAP + DEFAULT_BUTTON_H / 2;
       } else {
-        bottomY = originY + contentH + GAP + DEFAULT_BUTTON_H / 2;
+        bottomY = afterRules + DEFAULT_BUTTON_H / 2;
       }
       if (vkeyboard) {
         vkeyboard.visible = showVkeyboard;
@@ -114,5 +141,5 @@ export const createGridScene = ({
     };
   };
 
-  return { grid, panel, onTick };
+  return { grid, scoreHud, onTick };
 };

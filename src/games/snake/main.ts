@@ -3,7 +3,6 @@ import '@shared/dev-frame';
 import { track } from '@shared/track';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
-import { createNextGameButton } from '@actors/next-game-button';
 import { createGridOverlay } from '@actors/grid-overlay';
 import { createGridScene } from '@actors/scene';
 import {
@@ -16,7 +15,7 @@ import {
 } from './config';
 import { createInitialState, enqueueDir, step, type Dir, type SnakeState } from './state';
 
-const RULES_TEXT = ['EAT THE SQUARE.', '', 'AVOID WALLS', 'AND YOURSELF.'].join('\n');
+const RULES_TEXT = "↑ ↓ ← → · eat · don't bite yourself";
 
 const KEY_TO_DIR: Record<string, Dir> = {
   ArrowUp: 'up',
@@ -62,18 +61,17 @@ const scene = createGridScene({
   stats: { SCORE: '0', BEST: String(best) },
   borderAlpha: 1,
   controls: { onDirection: (direction) => enqueueDir(state, direction) },
-  buttons: ({ grid, panel }) => [
+  buttons: ({ grid, scoreHud }) => [
     createButton({
       label: 'RESTART',
       onPress: () => {
         track('arcade_game_restart', { game: getGame() });
         state = createInitialState(CFG);
         tickAccum = 0;
-        panel.setStat('SCORE', '0');
+        scoreHud.setStat('SCORE', '0');
         grid.drawRects(state.body, [state.food]);
       },
     }),
-    createNextGameButton(),
   ],
 });
 
@@ -119,10 +117,10 @@ scene.onTick(({ deltaMS }) => {
     if (state.score > best) {
       best = state.score;
       localStorage.setItem(BEST_STORAGE_KEY, String(best));
-      scene.panel.setStat('BEST', String(best));
+      scene.scoreHud.setStat('BEST', String(best));
     }
   } else {
-    scene.panel.setStat('SCORE', String(state.score));
+    scene.scoreHud.setStat('SCORE', String(state.score));
   }
   draw();
 });

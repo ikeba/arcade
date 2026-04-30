@@ -1,5 +1,5 @@
-// Pixels of breathing room between the grid and anything that sits next to it
-// (canvas edge, title, side panel, button row). Shared so every grid-based
+// Pixels of breathing room between the grid and anything stacked around it
+// (canvas edge, title, rules line, button row). Shared so every grid-based
 // game frames its playfield the same way.
 export const GAP = 16;
 

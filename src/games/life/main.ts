@@ -1,7 +1,6 @@
 import '@shared/dev-frame';
 import { createGame } from '@shared/game';
 import { createButton } from '@actors/button';
-import { createNextGameButton } from '@actors/next-game-button';
 import { createGridScene } from '@actors/scene';
 import { randomInt } from '@shared/helpers/random';
 import { GRID_ALPHA, GRID_COLS, GRID_ROWS, TICK_MS } from './config';
@@ -11,17 +10,7 @@ import { SEED_POOL, type Pattern } from './patterns';
 const SEED_FIGURES_MIN = 6;
 const SEED_FIGURES_MAX = 12;
 
-const RULES_TEXT = [
-  'LIVE CELL WITH 2',
-  'OR 3 NEIGHBORS',
-  'LIVES.',
-  '',
-  'EMPTY CELL WITH',
-  'EXACTLY 3',
-  'NEIGHBORS IS BORN.',
-  '',
-  'ALL OTHERS DIE.',
-].join('\n');
+const RULES_TEXT = 'cell live on 2–3 neighbors · born on 3 · else die';
 
 const container = document.getElementById('app');
 if (!container) {
@@ -99,7 +88,6 @@ const scene = createGridScene({
         grid.drawCells(cells);
       },
     }),
-    createNextGameButton(),
   ],
 });
 

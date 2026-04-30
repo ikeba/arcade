@@ -16,7 +16,7 @@ export const PADDLE_ROW = GRID_ROWS - 2;
 
 // Cells per second when an arrow key is held. Tap (non-repeating keydown)
 // also kicks the paddle by 1 cell for instant feel.
-export const PADDLE_SPEED = 18.0;
+export const PADDLE_SPEED = 28.0;
 // Cells the paddle jumps per vkeyboard tap. Larger than 1 because touch taps
 // are slower than holding a key on a keyboard.
 export const PADDLE_TAP_STEP = 1.5;
